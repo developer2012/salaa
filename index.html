@@ -1,1 +1,1789 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Speaking Zone AI — IELTS Speaking 7+ System</title>
+  <meta name="description" content="IELTS Speaking uchun Real Exam Simulator, Dynamic Follow-up, Interruption, Stress Mode, Full Analytics, 7-kunlik plan va Report export." />
 
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --panel:#111424;
+      --card:#151a33;
+      --card2:#101327;
+      --text:#e9ecff;
+      --muted:#aab0d6;
+      --line:rgba(255,255,255,.08);
+      --gold:#ffd24a;
+      --gold2:#ffbf1a;
+      --ok:#47f59a;
+      --bad:#ff5b7d;
+      --blue:#78a6ff;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    [data-theme="light"]{
+      --bg:#f6f7ff;
+      --panel:#ffffff;
+      --card:#ffffff;
+      --card2:#f3f5ff;
+      --text:#10122a;
+      --muted:#3f4570;
+      --line:rgba(10,10,20,.12);
+      --shadow: 0 18px 50px rgba(10,10,20,.12);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(120,166,255,.16), transparent 60%),
+                  radial-gradient(900px 500px at 90% 20%, rgba(255,210,74,.12), transparent 55%),
+                  radial-gradient(900px 600px at 30% 90%, rgba(71,245,154,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .container{max-width:1180px;margin:0 auto;padding:0 18px}
+    .nav{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.10));
+      border-bottom: 1px solid var(--line);
+    }
+    [data-theme="light"] .nav{background:rgba(255,255,255,.75)}
+    .nav-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 0;
+      gap:12px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px
+    }
+    .logo{
+      width:38px;height:38px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(255,210,74,.95), rgba(120,166,255,.85));
+      box-shadow: var(--shadow);
+      display:grid;place-items:center;
+      font-weight:900;color:#0b0b0f;
+    }
+    .nav-links{
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end
+    }
+    .nav-links a{
+      text-decoration:none;
+      padding:10px 12px;border-radius:12px;
+      color:var(--muted);
+      border:1px solid transparent;
+      transition:.2s;
+      font-weight:600;
+      font-size:14px;
+    }
+    .nav-links a:hover{
+      color:var(--text);
+      border-color: var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .chip{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding:10px 12px;border-radius:999px;
+      display:flex;gap:10px;align-items:center;
+    }
+    .btn{
+      border:none;
+      padding:12px 14px;border-radius:14px;
+      cursor:pointer;
+      font-weight:800;
+      transition:.2s;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      text-decoration:none;
+      user-select:none;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn-primary{
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#0b0b0f;
+      box-shadow: 0 14px 36px rgba(255,210,74,.18);
+    }
+    .btn-primary:hover{filter:brightness(1.03)}
+    .btn-ghost{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+    }
+    .btn-ghost:hover{background: rgba(255,255,255,.06)}
+    .btn-mini{
+      padding:10px 12px;border-radius:12px;font-size:13px;font-weight:800
+    }
+
+    .hero{padding:54px 0 22px}
+    .hero-grid{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr;gap:14px}
+      .nav-links{display:none}
+    }
+    .hero-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:26px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;inset:-60px -40px auto auto;
+      width:260px;height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,210,74,.22), transparent 60%),
+                  radial-gradient(circle at 70% 60%, rgba(120,166,255,.18), transparent 60%);
+      transform: rotate(12deg);
+      filter: blur(0px);
+      pointer-events:none;
+    }
+    .kicker{
+      display:inline-flex;gap:8px;align-items:center;
+      color:#0b0b0f;
+      background: linear-gradient(135deg, rgba(255,210,74,.95), rgba(120,166,255,.85));
+      padding:8px 12px;border-radius:999px;
+      font-weight:900;font-size:12px;
+    }
+    .title{
+      font-size:44px;line-height:1.08;margin:14px 0 12px;
+      letter-spacing:-.7px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:16px;
+      max-width:62ch;
+    }
+    .hero-actions{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:18px
+    }
+    .meta-row{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:18px
+    }
+    .pill{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      padding:10px 12px;border-radius:999px;
+      color:var(--muted);
+      font-weight:700;font-size:13px;
+      display:inline-flex;gap:10px;align-items:center
+    }
+    .dot{
+      width:9px;height:9px;border-radius:99px;background:var(--ok);
+      box-shadow:0 0 0 6px rgba(71,245,154,.14);
+    }
+
+    .panel{
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .panel h3{margin:0 0 10px;font-size:16px}
+    .panel p{margin:0;color:var(--muted);font-size:13.5px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width: 720px){.grid2{grid-template-columns:1fr}}
+
+    .section{padding:30px 0}
+    .section-head{
+      display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .section-title{font-size:26px;margin:0}
+    .section-desc{margin:0;color:var(--muted);max-width:80ch}
+    .badge{
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);font-weight:800;font-size:12px;
+    }
+
+    .cards{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+    }
+    @media (max-width: 980px){.cards{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 640px){.cards{grid-template-columns:1fr}}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+      transition:.18s;
+      position:relative;
+      overflow:hidden;
+      min-height:120px;
+    }
+    .card:hover{transform:translateY(-3px)}
+    .card .top{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+      margin-bottom:10px
+    }
+    .ic{
+      width:42px;height:42px;border-radius:14px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      font-size:18px
+    }
+    .card h4{margin:0;font-size:16px}
+    .card p{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+    .card .more{
+      margin-top:12px;display:flex;gap:10px;flex-wrap:wrap
+    }
+
+    .split{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch
+    }
+    @media (max-width: 980px){.split{grid-template-columns:1fr}}
+    .list{
+      margin:0;padding:0;list-style:none;display:grid;gap:10px;
+    }
+    .li{
+      display:flex;gap:12px;align-items:flex-start;
+      padding:12px;border-radius:16px;
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--line);
+    }
+    .tick{
+      width:22px;height:22px;border-radius:10px;
+      background: rgba(71,245,154,.16);
+      border:1px solid rgba(71,245,154,.35);
+      display:grid;place-items:center;font-weight:900;color:var(--ok);
+      flex:0 0 auto;
+      margin-top:1px;
+    }
+    .li b{display:block}
+    .li span{color:var(--muted);font-size:13.5px}
+
+    .pricing{
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;
+    }
+    @media (max-width: 980px){.pricing{grid-template-columns:1fr}}
+    .price-card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .price-card.featured{
+      border-color: rgba(255,210,74,.6);
+      box-shadow: 0 20px 60px rgba(255,210,74,.12), var(--shadow);
+    }
+    .price-top{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:10px
+    }
+    .price{
+      font-size:34px;font-weight:1000;margin:10px 0 2px
+    }
+    .per{color:var(--muted);font-weight:800;font-size:12px}
+    .sep{height:1px;background:var(--line);margin:14px 0}
+    .small{color:var(--muted);font-size:13.5px;margin:0}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:4px 8px;border-radius:10px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      color:var(--text);
+      font-weight:800;
+      display:inline-flex;gap:6px;align-items:center;
+    }
+
+    .demo{
+      display:grid;grid-template-columns:1.1fr .9fr;gap:12px;
+    }
+    @media (max-width: 980px){.demo{grid-template-columns:1fr}}
+    .terminal{
+      background: #0a0c18;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      padding:14px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    [data-theme="light"] .terminal{background:#0f1230;color:#e9ecff}
+    .term-top{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px
+    }
+    .lights{display:flex;gap:8px}
+    .light{width:10px;height:10px;border-radius:99px;background:rgba(255,255,255,.25)}
+    .light.r{background:#ff5b7d}
+    .light.y{background:#ffd24a}
+    .light.g{background:#47f59a}
+    .term-body{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:13px;
+      color:#cfd6ff;
+      min-height:250px;
+      line-height:1.55;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+    .term-input{
+      display:flex;gap:10px;margin-top:10px
+    }
+    .input{
+      flex:1;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:12px 12px;
+      border-radius:14px;
+      outline:none;
+      font-weight:700;
+    }
+    .input::placeholder{color:rgba(255,255,255,.45)}
+    [data-theme="light"] .input::placeholder{color:rgba(20,20,40,.55)}
+    .tag{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-weight:900;font-size:12px
+    }
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+    .faq{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;
+    }
+    @media (max-width: 980px){.faq{grid-template-columns:1fr}}
+    .faq-item{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius);
+      padding:14px;
+      box-shadow: var(--shadow);
+      cursor:pointer;
+      user-select:none;
+    }
+    .faq-q{
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+      font-weight:900;
+    }
+    .faq-a{
+      color:var(--muted);
+      margin-top:10px;
+      display:none;
+      font-size:13.5px;
+      line-height:1.6;
+    }
+    .faq-item.open .faq-a{display:block}
+    .caret{
+      width:34px;height:34px;border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      display:grid;place-items:center;
+      flex:0 0 auto;
+      transition:.2s;
+    }
+    .faq-item.open .caret{transform:rotate(180deg)}
+
+    .footer{
+      padding:28px 0 50px;
+      border-top:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      margin-top:24px;
+    }
+    [data-theme="light"] .footer{background:rgba(255,255,255,.75)}
+    .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+    @media (max-width: 980px){.foot-grid{grid-template-columns:1fr}}
+    .foot small{color:var(--muted)}
+    .muted{color:var(--muted)}
+    .hr{height:1px;background:var(--line);margin:14px 0}
+
+    /* modal */
+    .overlay{
+      position:fixed;inset:0;
+      background: rgba(0,0,0,.6);
+      display:none;
+      align-items:center;justify-content:center;
+      padding:18px;
+      z-index:200;
+    }
+    .overlay.show{display:flex}
+    .modal{
+      width:min(920px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding:16px;
+      position:relative;
+      max-height: 86vh;
+      overflow:auto;
+    }
+    .modal-top{
+      display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+    }
+    .x{
+      width:44px;height:44px;border-radius:16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:1000;
+    }
+    .modal h3{margin:0;font-size:20px}
+    .modal p{color:var(--muted);margin:10px 0 0}
+    .modal .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    @media (max-width: 980px){.modal .cols{grid-template-columns:1fr}}
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12.5px;
+      color:#cfd6ff;
+    }
+    .hint{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    /* animate in */
+    .reveal{opacity:0;transform:translateY(14px);transition: .55s}
+    .reveal.show{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+
+<body data-theme="dark" data-lang="uz">
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="brand" onclick="scrollToId('top')" style="cursor:pointer">
+          <div class="logo">SZ</div>
+          <div>
+            <div style="font-size:14px">Speaking Zone AI</div>
+            <div style="font-size:12px;color:var(--muted);font-weight:800">IELTS Speaking 7+ System</div>
+          </div>
+        </div>
+
+        <div class="nav-links">
+          <a href="#features" onclick="navClick(event,'features')">Features</a>
+          <a href="#demo" onclick="navClick(event,'demo')">Demo</a>
+          <a href="#how" onclick="navClick(event,'how')">How it works</a>
+          <a href="#pricing" onclick="navClick(event,'pricing')">Pricing</a>
+          <a href="#faq" onclick="navClick(event,'faq')">FAQ</a>
+          <a href="#security" onclick="navClick(event,'security')">Security</a>
+        </div>
+
+        <div class="row">
+          <span class="chip">
+            <button class="btn btn-ghost btn-mini" id="langBtn" title="Language">UZ</button>
+            <button class="btn btn-ghost btn-mini" id="themeBtn" title="Theme">🌙</button>
+          </span>
+          <a class="btn btn-primary" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Open Bot →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div id="top"></div>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+
+        <div class="hero-card reveal">
+          <span class="kicker">🔥 Real IELTS Experience • Telegram Bot</span>
+          <h1 class="title" id="heroTitle">IELTS Speaking’ni “REAL EXAM” darajasida mashq qiling.</h1>
+          <p class="sub" id="heroSub">
+            Speaking Zone AI — bu oddiy savol-javob bot emas.
+            Bu: Real Exam Simulator + Dynamic Follow-up + Interruption + Stress Mode + Full Analytics.
+            Maqsad: muntazam practice orqali Band 7+ ga chiqishga yordam berish.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Start Free</a>
+            <button class="btn btn-ghost" onclick="scrollToId('pricing')">Get Premium</button>
+            <button class="btn btn-ghost" onclick="copyAd()">Copy Ads Text</button>
+          </div>
+
+          <div class="meta-row">
+            <span class="pill"><span class="dot"></span><span id="meta1">Real timer + stage auto-switch</span></span>
+            <span class="pill">🔁 <span id="meta2">Script emas — javobga qarab follow-up</span></span>
+            <span class="pill">📊 <span id="meta3">WPM / Filler / Grammar / Vocab analytics</span></span>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <h3 id="fastTitle">Tez tushuncha (1 daqiqa)</h3>
+          <p id="fastDesc">
+            IELTS Speaking’da Band 7+ bot “bermaydi” — examiner beradi.
+            Lekin bot real exam muhitini yaratib, gapirishni ko‘paytirsa, natija tezlashadi.
+          </p>
+          <div class="hr"></div>
+
+          <div class="grid2">
+            <div class="panel" style="padding:14px">
+              <h3>🎯 Band Estimator</h3>
+              <p class="small">Hozirgi darajangizni tanlang — taxminiy vaqtni ko‘ring.</p>
+              <div style="margin-top:10px" class="row">
+                <select class="input" id="levelSelect" style="max-width:220px">
+                  <option value="7.5">5.0</option>
+                  <option value="7.0">5.5</option>
+                  <option value="6.5">6.5</option>
+                  <option value="6.0">6.0</option>
+                  <option value="5.5" selected>7.0</option>
+                  <option value="5.0">7.5</option>
+                </select>
+                <button class="btn btn-primary btn-mini" onclick="calcTime()">Hisobla</button>
+              </div>
+              <p class="small" style="margin-top:10px"><span class="kbd">Natija</span> <span id="estOut">—</span></p>
+            </div>
+
+            <div class="panel" style="padding:14px">
+              <h3>📅 7 kunlik Plan</h3>
+              <p class="small">Bir bosishda 7 kunlik reja (frontend JS) generatsiya qiladi.</p>
+              <div class="row" style="margin-top:10px">
+                <button class="btn btn-ghost btn-mini" onclick="genPlan()">Generate</button>
+                <button class="btn btn-ghost btn-mini" onclick="copyPlan()">Copy</button>
+              </div>
+              <div class="hint mono" id="planBox" style="margin-top:10px;white-space:pre-wrap">Plan hali yo‘q.</div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+          <p class="small muted">
+            <b>Eslatma:</b> Bu taxmin. Natija sizning daily discipline + input (feedback) bilan ishlashingizga bog‘liq.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">🔥 Premium Features (17 ta)</h2>
+          <p class="section-desc">
+            Pastdagi har bir feature ustiga bosib <b>to‘liq izoh</b>ni ochishingiz mumkin.
+            Bu yerda “oddiy savol bank” emas — real exam mexanikasi bor.
+          </p>
+        </div>
+        <span class="badge">Click → Details</span>
+      </div>
+
+      <div class="cards">
+        <!-- 1 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🎓</div>
+            <div style="flex:1">
+              <h4>1) Real Exam Simulator</h4>
+              <p>Intro → Warm-up → Part 1 → Part 2 → Part 3 → Closing.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(1)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Real structure</span>
+            <span class="tag">Stage flow</span>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">⏱️</div>
+            <div style="flex:1">
+              <h4>2) Real Timer Mode</h4>
+              <p>Prep + speaking vaqt; time tugasa — keyingi bosqich.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(2)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Auto switch</span>
+            <span class="tag">Discipline</span>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🔁</div>
+            <div style="flex:1">
+              <h4>3) Dynamic Follow-up Engine</h4>
+              <p>Javobga qarab follow-up (script emas).</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(3)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Adaptive</span>
+            <span class="tag">Exam-like</span>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🧠</div>
+            <div style="flex:1">
+              <h4>4) Examiner Interruption Mode</h4>
+              <p>Why? Explain? Clarify? — real examiner uslubi.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(4)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Pressure</span>
+            <span class="tag">Natural</span>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">📊</div>
+            <div style="flex:1">
+              <h4>5) Full End-of-Test Breakdown</h4>
+              <p>Fluency, grammar, vocab, coherence — umumiy tahlil.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(5)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Score map</span>
+            <span class="tag">Action items</span>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🔍</div>
+            <div style="flex:1">
+              <h4>6) AI Weakness Detection</h4>
+              <p>5+ sessiondan keyin pattern topadi.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(6)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Patterns</span>
+            <span class="tag">Weakness</span>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">📅</div>
+            <div style="flex:1">
+              <h4>7) Personal Training Plan</h4>
+              <p>7 kunlik reja (AI tomonidan shaxsiylashtirilgan).</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(7)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Daily tasks</span>
+            <span class="tag">Focus</span>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">📈</div>
+            <div style="flex:1">
+              <h4>8) Future Band Prediction</h4>
+              <p>Progress trend bo‘yicha taxminiy band.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(8)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Trend</span>
+            <span class="tag">Forecast</span>
+          </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🎯</div>
+            <div style="flex:1">
+              <h4>9) Band 7+ Strategy Mode</h4>
+              <p>Structure + vocab bank + AI tavsiyalari.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(9)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Structure</span>
+            <span class="tag">Vocab</span>
+          </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">😈</div>
+            <div style="flex:1">
+              <h4>10) Stress Test Mode</h4>
+              <p>Qiyin savollar + tez follow-up + interruption ko‘p.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(10)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Hard</span>
+            <span class="tag">Fast</span>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🎤</div>
+            <div style="flex:1">
+              <h4>11) Smart Speech Analytics</h4>
+              <p>WPM / hesitation / confidence (eng batafsil).</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(11)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">WPM</span>
+            <span class="tag">Confidence</span>
+          </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">😬</div>
+            <div style="flex:1">
+              <h4>12) Filler Word Detector</h4>
+              <p>um/uh/like… kabi fillerlarni ushlaydi.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(12)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Filler</span>
+            <span class="tag">Cleaner speech</span>
+          </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">📚</div>
+            <div style="flex:1">
+              <h4>13) Vocabulary Diversity</h4>
+              <p>Unique / repetition / advanced usage tahlili.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(13)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Unique</span>
+            <span class="tag">Advanced</span>
+          </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🔥</div>
+            <div style="flex:1">
+              <h4>14) Grammar Heatmap</h4>
+              <p>Tense/article/preposition (heuristic) xatolar.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(14)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Heatmap</span>
+            <span class="tag">Targets</span>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🏆</div>
+            <div style="flex:1">
+              <h4>15) Official Report Export</h4>
+              <p>TXT export — natijani yuborish/saqlash.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(15)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Export</span>
+            <span class="tag">Share</span>
+          </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">📌</div>
+            <div style="flex:1">
+              <h4>16) Auto-Premium Speaking Boost</h4>
+              <p>Premium muddati davomida speakingga avtomatik qo‘shiladi.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(16)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Auto</span>
+            <span class="tag">Boost</span>
+          </div>
+        </div>
+
+        <!-- 17 -->
+        <div class="card reveal">
+          <div class="top">
+            <div class="ic">🛠</div>
+            <div style="flex:1">
+              <h4>17) AI Scoring Upgrade</h4>
+              <p>AI tekshiruv anchagina takomillashadi.</p>
+            </div>
+            <button class="btn btn-ghost btn-mini" onclick="openFeature(17)">Details</button>
+          </div>
+          <div class="more">
+            <span class="tag">Smarter</span>
+            <span class="tag">Stricter</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="section" id="demo">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">🧪 Mini Demo (Frontend Simulator)</h2>
+          <p class="section-desc">
+            Bu demo botning logikasini to‘liq almashtirmaydi, lekin foydalanuvchiga “nima bo‘ladi?” degan savolga
+            tez javob beradi: stage, timer, follow-up, interruption.
+          </p>
+        </div>
+        <span class="badge">Interactive</span>
+      </div>
+
+      <div class="demo">
+        <div class="terminal reveal">
+          <div class="term-top">
+            <div class="lights">
+              <span class="light r"></span><span class="light y"></span><span class="light g"></span>
+            </div>
+            <div class="row">
+              <span class="tag" id="demoStage">STAGE: INTRO</span>
+              <span class="tag" id="demoTimer">TIMER: —</span>
+            </div>
+          </div>
+
+          <div class="term-body" id="termBody">Welcome to Speaking Zone Demo.
+Type: /start to begin (simulated).
+</div>
+
+          <div class="term-input">
+            <input class="input" id="termInput" placeholder="Type here... e.g. /start" />
+            <button class="btn btn-primary btn-mini" onclick="sendTerm()">Send</button>
+            <button class="btn btn-ghost btn-mini" onclick="resetDemo()">Reset</button>
+          </div>
+
+          <p class="small muted" style="margin-top:10px">
+            Tip: /part1, /part2, /part3, /stress, /interrupt, /report
+          </p>
+        </div>
+
+        <div class="panel reveal">
+          <h3>🎛 Demo Controls</h3>
+          <p class="small">Quyidagilar demo’da bosqichlarni tez o‘zgartiradi (simulated).</p>
+
+          <div class="hr"></div>
+
+          <div class="row">
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/start')">/start</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/part1')">/part1</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/part2')">/part2</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/part3')">/part3</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/stress')">/stress</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/interrupt')">/interrupt</button>
+            <button class="btn btn-ghost btn-mini" onclick="demoCmd('/report')">/report</button>
+          </div>
+
+          <div class="hr"></div>
+
+          <h3>📝 Ads text (copy)</h3>
+          <p class="small">Telegramga reklama matnini tez nusxalash:</p>
+          <div class="hint mono" id="adBox" style="white-space:pre-wrap;margin-top:10px"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn btn-primary btn-mini" onclick="copyAd()">Copy</button>
+            <a class="btn btn-ghost btn-mini" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Open Bot</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">⚙️ Qanday ishlaydi (real flow)</h2>
+          <p class="section-desc">
+            Speaking Zone AI bot ichida foydalanuvchi real IELTS tartibida gapiradi.
+            Premium yoqilganda: timer, follow-up, interruption, stress va analytics avtomatik qo‘shiladi.
+          </p>
+        </div>
+        <span class="badge">Step-by-step</span>
+      </div>
+
+      <div class="split">
+        <div class="panel reveal">
+          <h3>✅ Oddiy foydalanuvchi flow</h3>
+          <ul class="list">
+            <li class="li"><span class="tick">✓</span><div><b>/start</b><span>Botga kirib session boshlaysiz.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Part 1</b><span>Daily life savollar, flowni ushlab gapirish.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Part 2</b><span>1 topic — 1–2 min story (structure).</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Part 3</b><span>Chuqur savollar: reasons, impacts, comparisons.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Feedback</b><span>Yakuniy feedback + next actions.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="panel reveal">
+          <h3>👑 Premium flow (nima qo‘shiladi)</h3>
+          <ul class="list">
+            <li class="li"><span class="tick">✓</span><div><b>Real Timer Mode</b><span>Preparation + speaking vaqtini boshqaradi.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Dynamic Follow-up</b><span>Javobingizga qarab savol “o‘sadi”.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Interruption</b><span>Examiner “Why?” bilan to‘xtatadi.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Stress Mode</b><span>Tez savol + qiyin follow-up.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Full Analytics</b><span>WPM, filler, grammar, vocab, confidence.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">💎 Pricing</h2>
+          <p class="section-desc">
+            Narxlarni o‘zing keyin tahrirlab qo‘yasan. Hozir placeholder.
+          </p>
+        </div>
+        <span class="badge">Edit anytime</span>
+      </div>
+
+      <div class="pricing">
+        <div class="price-card reveal">
+          <div class="price-top">
+            <div>
+              <h3 style="margin:0">Free</h3>
+              <p class="small">Basic speaking practice</p>
+            </div>
+            <span class="badge">Start</span>
+          </div>
+          <div class="price">free</div>
+          <div class="per">forever</div>
+          <div class="sep"></div>
+          <ul class="list">
+            <li class="li"><span class="tick">✓</span><div><b>Speaking practice</b><span>Basic questions + guidance.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Simple feedback</b><span>Short improvement tips.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Try before buy</b><span>Premiumni ko‘rib chiqish.</span></div></li>
+          </ul>
+          <div class="hr"></div>
+          <a class="btn btn-primary" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Start Free →</a>
+        </div>
+
+        <div class="price-card featured reveal">
+          <div class="price-top">
+            <div>
+              <h3 style="margin:0">Premium</h3>
+              <p class="small">Full exam simulator + analytics</p>
+            </div>
+            <span class="badge">Best</span>
+          </div>
+          <div class="price">23 000 so'm</div>
+          <div class="per">per month (edit)</div>
+          <div class="sep"></div>
+          <ul class="list">
+            <li class="li"><span class="tick">✓</span><div><b>Real Exam Simulator</b><span>Intro → P1 → P2 → P3.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Timer + auto stage</b><span>Real IELTS rhythm.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Dynamic follow-up</b><span>Script emas.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Analytics</b><span>WPM/Filler/Grammar/Vocab.</span></div></li>
+          </ul>
+          <div class="hr"></div>
+          <a class="btn btn-primary" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Get Premium →</a>
+          <button class="btn btn-ghost" style="margin-top:10px;width:100%" onclick="scrollToId('demo')">See Demo</button>
+        </div>
+
+        <div class="price-card reveal">
+          <div class="price-top">
+            <div>
+              <h3 style="margin:0">Team / School</h3>
+              <p class="small">Group plan (placeholder)</p>
+            </div>
+            <span class="badge">B2B</span>
+          </div>
+          <div class="price">$—</div>
+          <div class="per">custom</div>
+          <div class="sep"></div>
+          <p class="small">
+            O‘quv markazlar uchun: leaderboards, group analytics, weekly challenges kabi
+            modulni ham qo‘shish mumkin (keyin).
+          </p>
+          <div class="hr"></div>
+          <a class="btn btn-ghost" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Contact in Telegram →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">❓ FAQ (ko‘p so‘raladigan)</h2>
+          <p class="section-desc">Savolni bosing — javob ochiladi.</p>
+        </div>
+        <span class="badge">Accordion</span>
+      </div>
+
+      <div class="faq">
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">Bot Band 7+ kafolatlaydimi? <span class="caret">⌄</span></div>
+          <div class="faq-a">Yo‘q. Bandni IELTS examiner qo‘yadi. Bot esa real exam muhitini yaratib, gapirishni ko‘paytiradi va feedback beradi. Natija intizomga bog‘liq.</div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">5.5 dan 7+ qancha vaqtda? <span class="caret">⌄</span></div>
+          <div class="faq-a">Har kuni 20–30 daqiqa speaking + feedback ustida ishlash bo‘lsa: odatda 30–45 kun. Agar haftasiga 2–3 marta bo‘lsa: 2–3 oyga cho‘zilishi mumkin.</div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">Dynamic follow-up nimasi bilan zo‘r? <span class="caret">⌄</span></div>
+          <div class="faq-a">Script savol banki emas: siz aytgan javobdan keyingi savol “mantiqan davom” bo‘ladi. Bu real examinerga juda o‘xshash.</div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">Timer mode nima beradi? <span class="caret">⌄</span></div>
+          <div class="faq-a">IELTS speaking ritmini o‘rgatadi: vaqt bilan gapirish, tez fikr yig‘ish, bosqichdan bosqichga o‘tish.</div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">Stress mode kimga kerak? <span class="caret">⌄</span></div>
+          <div class="faq-a">Imtihonda hayajon bo‘lsa, gap buziladi. Stress mode “bosim”ni mashq qildiradi: tez savol, interruption, qiyin follow-up.</div>
+        </div>
+
+        <div class="faq-item reveal" onclick="toggleFaq(this)">
+          <div class="faq-q">Report export nimaga? <span class="caret">⌄</span></div>
+          <div class="faq-a">Natijani TXT ko‘rinishda saqlaysiz, ustozga yuborasiz, progressni taqqoslaysiz.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY / PRIVACY -->
+  <section class="section" id="security">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <h2 class="section-title">🔒 Security & Privacy</h2>
+          <p class="section-desc">
+            Bu bo‘lim foydalanuvchiga ishonch beradi. Tekstni o‘zing serveringga moslab tahrirlaysan.
+          </p>
+        </div>
+        <span class="badge">Trust</span>
+      </div>
+
+      <div class="split">
+        <div class="panel reveal">
+          <h3>✅ Bizning yondashuv</h3>
+          <ul class="list">
+            <li class="li"><span class="tick">✓</span><div><b>Minimal data</b><span>Kerak bo‘lmagan shaxsiy ma’lumot so‘ralmaydi.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Purpose only</b><span>Data faqat feedback va progress uchun ishlatiladi.</span></div></li>
+            <li class="li"><span class="tick">✓</span><div><b>Control</b><span>Foydalanuvchi xohlaganda sessionlarni to‘xtatadi.</span></div></li>
+          </ul>
+        </div>
+        <div class="panel reveal">
+          <h3>⚠️ Muhim eslatma</h3>
+          <p class="small">
+            Bu sayt demo/landing. Botning real data siyosati hosting va backend konfiguratsiyaga bog‘liq.
+            Agar xohlasang, men senga “Privacy Policy” va “Terms” sahifalarini ham yozib beraman.
+          </p>
+          <div class="hr"></div>
+          <p class="small muted">
+            <b>Disclaimer:</b> IELTS — Cambridge/IDP/BC brendlari bilan bog‘liq emas. Biz mustaqil tayyorlov toolmiz.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="container foot">
+      <div class="foot-grid reveal">
+        <div>
+          <div class="brand">
+            <div class="logo">SZ</div>
+            <div>
+              <div style="font-weight:1000">Speaking Zone AI</div>
+              <small>IELTS Speaking 7+ System (Telegram Bot)</small>
+            </div>
+          </div>
+          <div class="hr"></div>
+          <small class="muted">
+            © <span id="year"></span> Speaking Zone AI. All rights reserved.
+          </small>
+        </div>
+
+        <div>
+          <b>Links</b>
+          <div class="hr"></div>
+          <div class="row" style="flex-direction:column;align-items:flex-start">
+            <a class="muted" href="#features" onclick="navClick(event,'features')">Features</a>
+            <a class="muted" href="#demo" onclick="navClick(event,'demo')">Demo</a>
+            <a class="muted" href="#pricing" onclick="navClick(event,'pricing')">Pricing</a>
+            <a class="muted" href="#faq" onclick="navClick(event,'faq')">FAQ</a>
+          </div>
+        </div>
+
+        <div>
+          <b>Contact</b>
+          <div class="hr"></div>
+          <div class="row" style="flex-direction:column;align-items:flex-start">
+            <span class="muted">Telegram: @Speaking_zone_bot</span>
+            <span class="muted">Support: (add later)</span>
+            <a class="btn btn-primary" href="https://t.me/Speaking_zone_bot" target="_blank" rel="noreferrer">Open Bot →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURE MODAL -->
+  <div class="overlay" id="overlay" onclick="overlayClose(event)">
+    <div class="modal" id="modal">
+      <div class="modal-top">
+        <div>
+          <h3 id="mTitle">—</h3>
+          <p id="mDesc">—</p>
+        </div>
+        <button class="x" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="cols">
+        <div class="hint">
+          <b>What it does</b>
+          <div class="hr"></div>
+          <div class="mono" id="mDoes">—</div>
+        </div>
+        <div class="hint">
+          <b>Why it helps Band 7+</b>
+          <div class="hr"></div>
+          <div class="mono" id="mWhy">—</div>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top:12px">
+        <b>Example (mini)</b>
+        <div class="hr"></div>
+        <div class="mono" id="mEx">—</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --------------------------
+    // UTIL
+    // --------------------------
+    const $ = (q)=>document.querySelector(q);
+    const $$ = (q)=>Array.from(document.querySelectorAll(q));
+
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+    function navClick(e,id){
+      e.preventDefault();
+      scrollToId(id);
+    }
+
+    // --------------------------
+    // THEME + LANG
+    // --------------------------
+    const themeBtn = $("#themeBtn");
+    const langBtn = $("#langBtn");
+
+    themeBtn.addEventListener("click", ()=>{
+      const body = document.body;
+      const isDark = body.getAttribute("data-theme") === "dark";
+      body.setAttribute("data-theme", isDark ? "light" : "dark");
+      themeBtn.textContent = isDark ? "☀️" : "🌙";
+    });
+
+    const STR = {
+      uz:{
+        heroTitle:"IELTS Speaking’ni “REAL EXAM” darajasida mashq qiling.",
+        heroSub:"Speaking Zone AI — bu oddiy savol-javob bot emas. Bu: Real Exam Simulator + Dynamic Follow-up + Interruption + Stress Mode + Full Analytics. Maqsad: muntazam practice orqali Band 7+ ga chiqishga yordam berish.",
+        meta1:"Real timer + stage auto-switch",
+        meta2:"Script emas — javobga qarab follow-up",
+        meta3:"WPM / Filler / Grammar / Vocab analytics",
+        fastTitle:"Tez tushuncha (1 daqiqa)",
+        fastDesc:"IELTS Speaking’da Band 7+ bot “bermaydi” — examiner beradi. Lekin bot real exam muhitini yaratib, gapirishni ko‘paytirsa, natija tezlashadi.",
+        adText:
+`🎓 Real IELTS Speaking Simulator
+
+⏱ Real timer (prep + speaking)
+🔁 Dynamic follow-up (script emas)
+😈 Interruption + Stress mode
+📊 Full analytics + IELTS report
+
+Bu oddiy practice emas — real exam simulyatsiyasi.
+👑 Premiumni yoqing: @Speaking_zone_bot`
+      },
+      en:{
+        heroTitle:"Practice IELTS Speaking in a REAL EXAM environment.",
+        heroSub:"Speaking Zone AI is not a basic Q&A bot. It delivers Real Exam Simulator + Dynamic Follow-up + Interruption + Stress Mode + Full Analytics. Goal: help you reach Band 7+ through consistent practice.",
+        meta1:"Real timer + stage auto-switch",
+        meta2:"Not scripted — adaptive follow-ups",
+        meta3:"WPM / Filler / Grammar / Vocab analytics",
+        fastTitle:"Quick overview (1 minute)",
+        fastDesc:"A bot cannot 'give' Band 7+ — only an examiner does. But exam-like practice + feedback can accelerate your progress.",
+        adText:
+`🎓 Real IELTS Speaking Simulator
+
+⏱ Real timer (prep + speaking)
+🔁 Dynamic follow-up (not scripted)
+😈 Interruption + Stress mode
+📊 Full analytics + IELTS report
+
+Not just practice — a real exam simulation.
+👑 Upgrade: @Speaking_zone_bot`
+      }
+    };
+
+    function setLang(next){
+      document.body.setAttribute("data-lang", next);
+      langBtn.textContent = next.toUpperCase();
+      $("#heroTitle").textContent = STR[next].heroTitle;
+      $("#heroSub").textContent = STR[next].heroSub;
+      $("#meta1").textContent = STR[next].meta1;
+      $("#meta2").textContent = STR[next].meta2;
+      $("#meta3").textContent = STR[next].meta3;
+      $("#fastTitle").textContent = STR[next].fastTitle;
+      $("#fastDesc").textContent = STR[next].fastDesc;
+      $("#adBox").textContent = STR[next].adText;
+    }
+    langBtn.addEventListener("click", ()=>{
+      const cur = document.body.getAttribute("data-lang") || "uz";
+      setLang(cur === "uz" ? "en" : "uz");
+    });
+
+    // --------------------------
+    // BAND ESTIMATOR
+    // --------------------------
+    function calcTime(){
+      const lvl = parseFloat($("#levelSelect").value);
+      // taxminiy: discipline=har kuni
+      // 6.5 -> 10-14 kun, 6.0 -> 14-28 kun, 5.5 -> 30-45 kun, 5.0 -> 45-70 kun
+      let out = "";
+      if(lvl >= 6.5) out = "Taxminiy: 10–14 kun (har kuni 25–35 min).";
+      else if(lvl >= 6.0) out = "Taxminiy: 14–28 kun (har kuni 20–30 min).";
+      else if(lvl >= 5.5) out = "Taxminiy: 30–45 kun (har kuni 20–30 min).";
+      else out = "Taxminiy: 45–70 kun (har kuni 25–40 min).";
+      $("#estOut").textContent = out;
+    }
+
+    // --------------------------
+    // 7-DAY PLAN GENERATOR
+    // --------------------------
+    const planTemplatesUZ = [
+      "Day 1: Part 1 (15 savol) + 10 min shadowing + 5 min filler cleanup.",
+      "Day 2: Part 2 (2 cue card) — structure: (intro→story→detail→wrap) + 5 min vocab bank.",
+      "Day 3: Part 3 (8 savol) — reasons/impacts/compare + 5 min linking practice.",
+      "Day 4: Full mock (P1→P2→P3) timer bilan + reportdan 3 weakness tanlab drill.",
+      "Day 5: Stress mode: tez follow-up + interruption + confidence drill (speaking 20 min).",
+      "Day 6: Grammar heatmap asosida 3 xato turini tuzatish + 1 full Part 2.",
+      "Day 7: Full mock + band strategy (answers depth) + progress check."
+    ];
+    const planTemplatesEN = [
+      "Day 1: Part 1 (15 questions) + 10 min shadowing + 5 min filler cleanup.",
+      "Day 2: Part 2 (2 cue cards) — structure (intro→story→detail→wrap) + 5 min vocab bank.",
+      "Day 3: Part 3 (8 questions) — reasons/impacts/compare + 5 min linking practice.",
+      "Day 4: Full mock (P1→P2→P3) with timer + drill top 3 weaknesses from report.",
+      "Day 5: Stress mode: fast follow-ups + interruptions + confidence drill (20 min).",
+      "Day 6: Fix 3 grammar heatmap issues + 1 full Part 2.",
+      "Day 7: Full mock + Band strategy (depth) + progress check."
+    ];
+
+    function genPlan(){
+      const lang = document.body.getAttribute("data-lang") || "uz";
+      const arr = lang === "uz" ? planTemplatesUZ : planTemplatesEN;
+      const lvl = parseFloat($("#levelSelect").value);
+      const extra = (lvl <= 5.5)
+        ? (lang==="uz" ? "\nExtra: Har kuni 5–10 min pronunciation (shadowing) qo‘shing." : "\nExtra: Add 5–10 min pronunciation shadowing daily.")
+        : (lang==="uz" ? "\nExtra: Answers depth: reasons + example + mini conclusion." : "\nExtra: Increase depth: reasons + example + mini conclusion.");
+      $("#planBox").textContent = arr.map((x,i)=>`${i+1}) ${x}`).join("\n") + extra;
+    }
+
+    async function copyPlan(){
+      const t = $("#planBox").textContent.trim();
+      if(!t || t==="Plan hali yo‘q.") return toast("Avval Generate bosing.");
+      await navigator.clipboard.writeText(t);
+      toast("Plan copied ✅");
+    }
+
+    // --------------------------
+    // ADS TEXT
+    // --------------------------
+    function buildAdText(){
+      const lang = document.body.getAttribute("data-lang") || "uz";
+      return STR[lang].adText;
+    }
+    function renderAd(){
+      $("#adBox").textContent = buildAdText();
+    }
+    async function copyAd(){
+      const t = buildAdText();
+      await navigator.clipboard.writeText(t);
+      toast("Ads text copied ✅");
+    }
+
+    // --------------------------
+    // FAQ
+    // --------------------------
+    function toggleFaq(el){
+      el.classList.toggle("open");
+    }
+
+    // --------------------------
+    // FEATURE MODAL CONTENT
+    // --------------------------
+    const FEATURES = {
+      1:{
+        title:"1) Real Exam Simulator",
+        desc:"Intro → Warm-up → Part 1 → Part 2 → Part 3 → Closing format.",
+        does:
+`• Imtihon tartibini 1:1 his qildiradi
+• Bosqichlar ketma-ket o‘tadi
+• Savollar Part’lar bo‘yicha to‘g‘ri tarqatiladi`,
+        why:
+`Band 7+ uchun eng katta muammo: real formatga moslashmaslik.
+Simulyatsiya sizni “exam mode”ga o‘rgatadi: to‘xtamasdan gapirish, stage switching, pressure.`,
+        ex:
+`Examiner: Let's start with Part 1. Do you like your hometown?
+You: (answer)
+Examiner: Why? (follow-up) → next question`
+      },
+      2:{
+        title:"2) Real Timer Mode",
+        desc:"Preparation + speaking time; tugasa — keyingi bosqich.",
+        does:
+`• Part 2 prep time + speaking time
+• Time tugashi bilan stage switch
+• Discipline: “cho‘zish” yo‘q`,
+        why:
+`IELTSda vaqtni boshqara olmaslik bandni tushiradi.
+Timer sizni: tez fikr yig‘ish + vaqt ichida gapirishga o‘rgatadi.`,
+        ex:`Part 2 prep: 60s → speaking: 120s
+Time's up → Part 3 starts automatically.`
+      },
+      3:{
+        title:"3) Dynamic Follow-up Engine",
+        desc:"Javobga qarab follow-up (script emas).",
+        does:
+`• Javobdan kalit so‘zlarni oladi
+• Follow-up savolni moslaydi
+• Har session bir xil savol takrorlanmaydi`,
+        why:
+`Band 7+ uchun “natural conversation” kerak.
+Script savollar sizni “yodlangan” qilib qo‘yadi.
+Dynamic follow-up esa real examinerga o‘xshaydi.`,
+        ex:`You: I prefer working remotely...
+Examiner: What challenges can remote work create for teamwork?`
+      },
+      4:{
+        title:"4) Examiner Interruption Mode",
+        desc:"Why? Explain? Clarify? — real examiner kabi.",
+        does:
+`• Javob uzun bo‘lsa bo‘lib tashlaydi
+• “Explain more” bilan chuqurlatadi
+• Confidence mashqi`,
+        why:
+`Real IELTSda examiner ko‘pincha to‘xtatadi.
+Bunga o‘rganmagan odam hayajonlanadi → fluency tushadi.`,
+        ex:`Examiner: Sorry to interrupt — can you clarify what you mean by 'efficient'?`
+      },
+      5:{
+        title:"5) Full End-of-Test Breakdown",
+        desc:"Test oxirida to‘liq tahlil.",
+        does:
+`• Fluency / coherence / vocab / grammar bo‘yicha feedback
+• Next actions: 3–5 ta aniq task
+• Session summary`,
+        why:
+`Band 7+ uchun “nimani tuzatishni bilish” muhim.
+Breakdown yo‘q bo‘lsa, odam random practice qiladi.`,
+        ex:`Weakness: repetition of 'very'
+Action: replace with: extremely, remarkably, highly, etc.`
+      },
+      6:{
+        title:"6) AI Weakness Detection",
+        desc:"5+ sessiondan keyin pattern topadi.",
+        does:
+`• Takror xatolarni ko‘radi
+• Qaysi grammar/vocab ko‘p qaytarilishini topadi
+• Habitlarni aniqlaydi`,
+        why:
+`Band 7+ ga chiqish “pattern”larni sindirishdan boshlanadi.
+Bir xil xato 10 marta takrorlansa band oshmaydi.`,
+        ex:`Pattern: overuse of 'and then'
+Fix: use sequencing: afterwards, subsequently, as a result...`
+      },
+      7:{
+        title:"7) Personal Training Plan",
+        desc:"7 kunlik shaxsiy reja.",
+        does:
+`• Sizning weakness’laringizga qarab plan
+• Har kuni: Part 1/2/3 mix
+• Drill + mock schedule`,
+        why:
+`Plan bo‘lmasa: practice tartibsiz bo‘ladi → o‘sish sekin.
+Plan: fokus + progress.`,
+        ex:`Day 2 focus: Part 2 structure + linking words`
+      },
+      8:{
+        title:"8) Future Band Prediction",
+        desc:"Trend asosida taxminiy band.",
+        does:
+`• Sessionlar bo‘yicha o‘sishni ko‘rsatadi
+• Trend: yuqoriga/pastga
+• Motivatsiya: “qayerdasan?”`,
+        why:
+`Ko‘pchilik progressni ko‘rmay charchaydi.
+Prediction trend motivatsiya beradi.`,
+        ex:`Trend: 6.0 → 6.5 (2 weeks) if daily practice continues`
+      },
+      9:{
+        title:"9) Band 7+ Strategy Mode",
+        desc:"Structure + vocab bank + AI tavsiya.",
+        does:
+`• Answer depth: reason + example + result
+• Part 2 story framework
+• Part 3 opinion building`,
+        why:
+`Band 7+ “deep answers” bilan keladi.
+Short answers: 5.5–6.0 atrofida qoladi.`,
+        ex:`Opinion → reason → example → mini conclusion`
+      },
+      10:{
+        title:"10) Stress Test Mode",
+        desc:"Hard + fast follow-up + interruption ko‘p.",
+        does:
+`• Qiyin savollar
+• Tez follow-up
+• Confidence under pressure`,
+        why:
+`Imtihonda stress bo‘lsa gap buziladi.
+Stress mode stressni “normal” qiladi.`,
+        ex:`Examiner: Answer in 15 seconds. Why do you think so?`
+      },
+      11:{
+        title:"11) Smart Speech Analytics",
+        desc:"WPM / hesitation / confidence.",
+        does:
+`• Speaking speed (WPM)
+• Hesitation markers
+• Confidence score (heuristic)`,
+        why:
+`Band 7+ uchun fluency shart.
+Analytics bo‘lsa, o‘zgarishni ko‘rasiz.`,
+        ex:`WPM 110 → 135 after 10 sessions`
+      },
+      12:{
+        title:"12) Filler Word Detector",
+        desc:"um/uh/like... fillerlarni ushlaydi.",
+        does:
+`• Filler count
+• Replacement tips
+• Cleaner answers`,
+        why:
+`Filler ko‘p bo‘lsa fluency tushadi.
+Band 7+ uchun gap “clean” bo‘lishi kerak.`,
+        ex:`Replace 'uh' with a short pause + linking phrase`
+      },
+      13:{
+        title:"13) Vocabulary Diversity",
+        desc:"Unique/repetition/advanced usage.",
+        does:
+`• Unique word count
+• Repetition index
+• Advanced collocations`,
+        why:
+`Band 7 lexicon: range + precision.
+Doim bir xil so‘z = band cheklanadi.`,
+        ex:`Instead of 'good': beneficial, worthwhile, effective`
+      },
+      14:{
+        title:"14) Grammar Heatmap",
+        desc:"Tense/article/preposition xatolar (heuristic).",
+        does:
+`• Xato turlarini ajratadi
+• Eng ko‘p xato bo‘ladigan joylar
+• Target drills`,
+        why:
+`Band 7 grammar: flexibility + accuracy.
+Heatmap sizni aniq joyga uradi.`,
+        ex:`Articles: a/the — 12 mistakes → drill set`
+      },
+      15:{
+        title:"15) Official Report Export (TXT)",
+        desc:"Natijani TXT ko‘rinishda saqlash/yuborish.",
+        does:
+`• Session summary
+• Scores + notes
+• Shareable TXT`,
+        why:
+`Ustoz/coach bilan ishlash osonlashadi.
+Progressni arxiv qilasiz.`,
+        ex:`Export → send to mentor → get extra feedback`
+      },
+      16:{
+        title:"16) Auto-Premium Speaking Boost",
+        desc:"Premium muddati davomida speakingga avtomatik qo‘shiladi.",
+        does:
+`• Premium bo‘lsa: features auto on
+• Speaking sessionlar “kuchli” bo‘ladi
+• Qo‘lda yoqib-o‘chirish shart emas`,
+        why:
+`User experience tez va qulay bo‘ladi.
+Har safar setting bilan ovora bo‘lmaysiz.`,
+        ex:`Premium active → Timer + Follow-ups enabled by default`
+      },
+      17:{
+        title:"17) AI Scoring Upgrade",
+        desc:"Tekshiruv ancha takomillashadi.",
+        does:
+`• Strict feedback
+• Better improvement suggestions
+• Clear action steps`,
+        why:
+`Band 7+ uchun feedback “aniq” bo‘lishi kerak:
+nima xato, nima o‘rniga nima.`,
+        ex:`Instead of vague: 'Improve grammar' → 'Fix articles + past tense consistency'`
+      }
+    };
+
+    function openFeature(n){
+      const f = FEATURES[n];
+      if(!f) return;
+      $("#mTitle").textContent = f.title;
+      $("#mDesc").textContent = f.desc;
+      $("#mDoes").textContent = f.does;
+      $("#mWhy").textContent = f.why;
+      $("#mEx").textContent = f.ex;
+      $("#overlay").classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+    function closeModal(){
+      $("#overlay").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+    function overlayClose(e){
+      if(e.target.id === "overlay") closeModal();
+    }
+
+    // --------------------------
+    // DEMO TERMINAL
+    // --------------------------
+    const termBody = $("#termBody");
+    const termInput = $("#termInput");
+    const demoStage = $("#demoStage");
+    const demoTimer = $("#demoTimer");
+
+    let stage = "INTRO";
+    let timer = null;
+    let secondsLeft = 0;
+    let stress = false;
+
+    function setStage(s){
+      stage = s;
+      demoStage.textContent = "STAGE: " + s;
+    }
+    function write(line){
+      termBody.textContent += line + "\n";
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+    function startTimer(sec){
+      stopTimer();
+      secondsLeft = sec;
+      demoTimer.textContent = "TIMER: " + secondsLeft + "s";
+      timer = setInterval(()=>{
+        secondsLeft--;
+        demoTimer.textContent = "TIMER: " + secondsLeft + "s";
+        if(secondsLeft <= 0){
+          stopTimer();
+          write("[Timer] Time's up → next stage (simulated).");
+          if(stage==="PART 2 PREP"){ setStage("PART 2"); startTimer(25); }
+          else if(stage==="PART 2"){ setStage("PART 3"); startTimer(20); }
+          else if(stage==="PART 1"){ setStage("PART 2 PREP"); startTimer(10); }
+          else if(stage==="PART 3"){ setStage("CLOSING"); demoTimer.textContent="TIMER: —"; write("Examiner: Thank you. That is the end of the speaking test."); }
+        }
+      }, 1000);
+    }
+    function stopTimer(){
+      if(timer){ clearInterval(timer); timer = null; }
+    }
+
+    function resetDemo(){
+      stopTimer();
+      setStage("INTRO");
+      demoTimer.textContent = "TIMER: —";
+      stress = false;
+      termBody.textContent = "Welcome to Speaking Zone Demo.\nType: /start to begin (simulated).\n";
+      termInput.value = "";
+    }
+
+    function demoCmd(cmd){
+      termInput.value = cmd;
+      sendTerm();
+    }
+
+    function sendTerm(){
+      const msg = (termInput.value || "").trim();
+      if(!msg) return;
+      write("> " + msg);
+      termInput.value = "";
+
+      if(msg === "/start"){
+        setStage("WARM-UP");
+        write("Examiner: Welcome. Can you tell me your full name?");
+        write("Examiner: Where are you from?");
+        write("Examiner: Great. Let's move to Part 1.");
+        setStage("PART 1");
+        startTimer(18);
+        write("Examiner: Do you enjoy spending time with friends?");
+        return;
+      }
+
+      if(msg === "/part1"){
+        setStage("PART 1");
+        startTimer(18);
+        write("Examiner: What do you usually do on weekends?");
+        return;
+      }
+
+      if(msg === "/part2"){
+        setStage("PART 2 PREP");
+        startTimer(10);
+        write("Examiner: Here's your cue card. You have 1 minute to prepare (simulated 10s).");
+        write("Cue card: Describe a memorable journey you had.");
+        return;
+      }
+
+      if(msg === "/part3"){
+        setStage("PART 3");
+        startTimer(20);
+        write("Examiner: Why do you think travel is important for young people?");
+        return;
+      }
+
+      if(msg === "/stress"){
+        stress = !stress;
+        write(stress ? "[Mode] Stress Mode ON 😈" : "[Mode] Stress Mode OFF");
+        return;
+      }
+
+      if(msg === "/interrupt"){
+        write("Examiner: Sorry to interrupt — can you explain that more clearly?");
+        write("Examiner: Why exactly do you think so?");
+        return;
+      }
+
+      if(msg === "/report"){
+        write("=== Report (simulated) ===");
+        write("Fluency: good, reduce fillers");
+        write("Grammar: watch articles a/the");
+        write("Vocab: add more collocations");
+        write("Action: 7-day plan + daily Part 2 structure");
+        return;
+      }
+
+      // default: respond with follow-up (simulated)
+      const followUps = stress
+        ? [
+          "Examiner: Answer faster. Give one reason and one example.",
+          "Examiner: Why? Be specific.",
+          "Examiner: Compare it with the past — in 15 seconds."
+        ]
+        : [
+          "Examiner: Interesting. Why do you say that?",
+          "Examiner: Can you give an example?",
+          "Examiner: How has it changed over time?"
+        ];
+      const pick = followUps[Math.floor(Math.random()*followUps.length)];
+      write(pick);
+    }
+
+    termInput.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter") sendTerm();
+    });
+
+    // --------------------------
+    // TOAST
+    // --------------------------
+    let toastTimer=null;
+    const toastEl = document.createElement("div");
+    toastEl.style.cssText = `
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      padding:12px 14px;border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.55);
+      color: var(--text);
+      font-weight:900;
+      box-shadow: var(--shadow);
+      display:none;z-index:999;
+      backdrop-filter: blur(12px);
+      max-width: 92vw;
+    `;
+    document.body.appendChild(toastEl);
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=>{ toastEl.style.display="none"; }, 1600);
+    }
+
+    // --------------------------
+    // REVEAL ON SCROLL
+    // --------------------------
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting) en.target.classList.add("show");
+      });
+    }, {threshold:.12});
+    $$(".reveal").forEach(el=>io.observe(el));
+
+    // init
+    $("#year").textContent = new Date().getFullYear();
+    setLang("uz");
+    renderAd();
+    calcTime();
+    resetDemo();
+  </script>
+</body>
+</html>
